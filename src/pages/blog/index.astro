@@ -28,10 +28,7 @@ const response = await fetch(GRAPHQL_URL,
 				    }
 				  }
 				}
-      `,
-      variables: {
-        // id: "ZmlsbXM6MQ==",
-      },
+      `
     }),
   });
 
@@ -121,7 +118,7 @@ console.log("posts", JSON.stringify(posts.data.posts.nodes))
 					{
 						posts.data.posts.nodes.map((post) => (
 							<li>
-								<a href={'/blog'+post.uri}>
+								<a href={post.uri}>
 									{post.featuredImage &&
 										<img width={720} height={360} src={post.featuredImage.node.mediaItemUrl} alt="" />
 									}
