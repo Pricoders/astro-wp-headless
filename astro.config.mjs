@@ -7,4 +7,6 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
 	site: 'http://pricode.local',
 	integrations: [mdx(), sitemap()],
+	output: 'hybrid',
+	alejo : 'alejogiraldo'
 });

@@ -1,20 +1,57 @@
 ---
-import { type CollectionEntry, getCollection } from 'astro:content';
+export const prerender = false;
+// import { type CollectionEntry, getCollection } from 'astro:content';
 import BlogPost from '../../layouts/BlogPost.astro';
+import { SITE_TITLE, SITE_DESCRIPTION, GRAPHQL_URL } from '../../consts';
+// import { defineConfig } from 'astro/config'
 
-export async function getStaticPaths() {
-	const posts = await getCollection('blog');
-	return posts.map((post) => ({
-		params: { slug: post.slug },
-		props: post,
-	}));
+//Functions
+const formattedUrl = () => {
+	 return Astro.url.pathname.replace('/blog/', '').replace(/^\/|\/$/g, '');
 }
-type Props = CollectionEntry<'blog'>;
+// export async function getStaticPaths() {
+// 	const posts = await getCollection('blog');
+// 	return posts.map((post) => ({
+// 		params: { slug: post.slug },
+// 		props: post,
+// 	}));
+// }
+// type Props = CollectionEntry<'blog'>;
 
-const post = Astro.props;
-const { Content } = await post.render();
+// const post = Astro.props;
+// const { Content } = await post.render();
+console.log( "alejo", Astro.site )
+
+const response = await fetch(GRAPHQL_URL,
+  {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      query: `
+        {
+				  post(id: "${formattedUrl()}", idType: SLUG) {
+				    id
+				    databaseId
+				    title
+				    uri
+				    slug
+				    date
+				    content
+				    featuredImage{
+				    	node{
+				    		mediaItemUrl
+				    	}
+				    }
+				  }
+				}
+      `}),
+  });
+
+const post = await response.json();
+
+console.log("post", JSON.stringify(post))
 ---
 
-<BlogPost {...post.data}>
-	<Content />
+<BlogPost {...post.data.post}>
+	<div set:html={post.data.post.content} />
 </BlogPost>
