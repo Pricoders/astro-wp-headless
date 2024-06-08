@@ -67,4 +67,60 @@ export async function getAllUrls(){
 	const data = await response.json();
   return data;
 }
+
+export async function getAllPosts(){
+	
+	const response = await fetch(GRAPHQL_URL,
+  {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      query: `
+        query GetPosts {
+				  posts{
+				    nodes{
+				  		id
+				      title
+				      uri
+				      excerpt
+              author {
+                node {
+                  id
+                  name
+                  uri
+                }
+              }
+              categories {
+                edges {
+                  node {
+                    id
+                    name
+                    uri
+                  }
+                }
+              }
+              tags {
+                edges {
+                  node {
+                    id
+                    name
+                    uri
+                  }
+                }
+              }
+              content
+				      featuredImage{
+				        node{
+				          mediaItemUrl
+				        }
+				      }
+				    }
+				  }
+				}
+      `
+    }),
+  });
+	const data = await response.json();
+  return data;
+}
 ---

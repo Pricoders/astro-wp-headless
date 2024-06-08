@@ -1,0 +1,22 @@
+---
+import BlogPost from '../layouts/BlogPost.astro';
+import { getPagebyUrl, getAllUrls } from './../services/wp.astro'
+
+export async function getStaticPaths() {
+	const posts = await getAllUrls();
+
+	return posts.data.posts.nodes.map((post) => ({
+		params: { slug: post.slug },
+		props: post,
+	}));
+	
+}
+
+const slug = Astro.params.slug;
+const post = await getPagebyUrl(slug)
+
+---
+
+<BlogPost {...post.data.post}>
+	<div set:html={post.data.post.content} />
+</BlogPost>

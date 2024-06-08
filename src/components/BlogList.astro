@@ -1,0 +1,30 @@
+---
+import { getAllPosts } from '../services/wp.astro'
+const posts = await getAllPosts()
+console.log(posts.data.posts.nodes)
+---
+
+
+{
+	posts.data.posts.nodes.map((post) => (
+		<article class="row mb-5">
+		<div class="col-12">
+		<div class="post-slider">
+		<img loading="lazy" src={post.featuredImage.node.mediaItemUrl} class="img-fluid" alt="post-thumb" />
+		</div>
+		</div>
+		<div class="col-lg-10 mx-auto">
+		<h3><a class="post-title" href="post-elements.html">{post.title}</a></h3>
+		<ul class="list-inline post-meta mb-4">
+		<li class="list-inline-item"><i class="ti-user mr-2"></i><a href={post.author.node.uri}>{post.author.node.name}</a></li>
+		<li class="list-inline-item">Date : March 15, 2020</li>
+		<li class="list-inline-item">Categories : <a href={post.categories.edges[0].node.uri} class="ml-1">{post.categories.edges[0].node.name} </a></li>
+		{/*<li class="list-inline-item">Tags : <a href={post.tags.edges[0].node.uri} class="ml-1">{post.tags.edges[0].node.name} </a></li>*/}
+		</ul>
+		<div set:html={post.content} />
+		<a href={post.uri} class="btn btn-outline-primary">Continue Reading</a>
+		</div>
+		</article>
+
+		))
+}
